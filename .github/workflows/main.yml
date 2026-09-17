@@ -1,0 +1,29 @@
+name: Build Windows Application
+
+on:
+  workflow_dispatch: # Allows you to trigger the build manually
+
+jobs:
+  build:
+    runs-on: windows-latest # Tells GitHub to use a free cloud Windows machine
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x' # Installs the required .NET SDK
+
+    - name: Run Build Script
+      run: |
+        Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+        ./build.ps1
+      shell: powershell
+
+    - name: Upload Compiled App
+      uses: actions/upload-artifact@v4
+      with:
+        name: AnimeStudio-Windows-Compiled
+        path: dist/
